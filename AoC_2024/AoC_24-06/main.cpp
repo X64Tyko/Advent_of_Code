@@ -149,25 +149,16 @@ int main()
     std::set<std::pair<int, int>> loopPoints;
 
     Guard guard;
-    int gridHeight = 0;
-    int gridWidth = 0;
     
     while (std::getline(data, streamString))
     {
-        grid.push_back(streamString);
         if (guard.GetX() == -1)
         {
-            guard.SetY(gridHeight);
+            guard.SetY(grid.size());
             guard.SetX(streamString.find('^'));
         }
-        
-        ++gridHeight;
-        gridWidth = streamString.size();
+        grid.push_back(streamString);
     }
-
-    std::cout << "Grid Size: " << gridWidth << " : " << gridHeight << "\n";
-
-    std::cout << "guard at: " << guard.GetX() << " : " << guard.GetY() << "\n";
 
     traveledLocations.insert(std::make_pair(guard.GetX(), guard.GetY()));
 
