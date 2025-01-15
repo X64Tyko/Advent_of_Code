@@ -4,6 +4,9 @@
 #include <vector>
 #include <utility>
 #include <set>
+#include <thread>
+#include <mutex>
+#include <queue>
 
 // Plan: Pull map into memory using a 2D array to represent the map.
 // Store guard location as X,Y coords.
@@ -93,6 +96,8 @@ public:
                 return std::make_pair(currentPoint.X - 1, currentPoint.Y);
                 break;
         }
+
+        return std::make_pair(-1, -1);
     }
 
     void DoMove(const char& nextTile, std::pair<int, int> nextCoord)
@@ -125,15 +130,23 @@ public:
 /// @param grid Copy of the grid so we can add in the new blocker
 /// @param guard a copy of the guard so that we can keep previous state
 /// @return true if we find a loop
-bool findLoop(std::vector<std::string> grid, Guard guard, std::pair<int, int> nextCoord)
+bool findLoop(std::set<std::pair<int, int>>& inLoopPoints, std::vector<std::string> grid, Guard guard, std::pair<int, int> nextCoord)
 {
+    std::mutex mutex;
+    std::pair<int, int> blockCoord = nextCoord;
     grid[nextCoord.second][nextCoord.first] = '#';
 
     while ( nextCoord.first >= 0 && nextCoord.first < grid[0].size() && nextCoord.second >= 0 && nextCoord.second < grid.size())
     {
         guard.DoMove(grid[nextCoord.second][nextCoord.first], nextCoord);
         if (guard.HasTraveledPoint())
+        {
+            mutex.lock();
+            inLoopPoints.insert(blockCoord);
+            mutex.unlock();
             return true;
+        }
+
         nextCoord = guard.GetNextCoord();
     }
 
@@ -142,11 +155,13 @@ bool findLoop(std::vector<std::string> grid, Guard guard, std::pair<int, int> ne
 
 int main()
 {
+    unsigned int numThreads = std::thread::hardware_concurrency();
     std::vector<std::string> grid;
     std::string streamString;
     std::ifstream data("input.txt");
     std::set<std::pair<int, int>> traveledLocations;
     std::set<std::pair<int, int>> loopPoints;
+    std::queue<std::thread> threads;
 
     Guard guard;
     
@@ -159,6 +174,8 @@ int main()
         }
         grid.push_back(streamString);
     }
+
+    std::cout << "Running threaded test" << "\n";
 
     traveledLocations.insert(std::make_pair(guard.GetX(), guard.GetY()));
 
@@ -179,14 +196,29 @@ int main()
                 }
             }
 
-            if (bValid && findLoop(grid, guard, nextCoord))
-                loopPoints.insert(nextCoord);
+            if (bValid)
+            {
+                if (threads.size() >= numThreads)
+                {
+                    auto& thread = threads.front();
+                    thread.join();
+                    threads.pop();
+                }
+                threads.push(std::thread(findLoop, std::ref(loopPoints), grid, guard, nextCoord));
+            }
         }
 
         // continue moving
         guard.DoMove(grid[nextCoord.second][nextCoord.first], nextCoord);
         traveledLocations.insert(std::make_pair(guard.GetX(), guard.GetY()));
         nextCoord = guard.GetNextCoord();
+    }
+
+    while (threads.size() > 0)
+    {
+        auto& thread = threads.front();
+        thread.join();
+        threads.pop();
     }
 
     std::cout <<"Traveled points: " << traveledLocations.size() << " Possible Loops: " << loopPoints.size();
