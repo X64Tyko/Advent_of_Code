@@ -1,0 +1,6 @@
+https://adventofcode.com/2024/day/7
+
+Considerations:
+Could have changed testOperations to take in strings instead. but figured that since it was already written for using ints and ull I would leave it as such. changing it would also result in a lot more stoi calls in the long run.
+
+This does not gracefully handle situations where the data isn't formatted correctly, such as a testVal with no operation values.
