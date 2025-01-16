@@ -35,11 +35,12 @@ struct Coord
         return X == other.X && Y == other.Y;
     }
 
-    std::size_t operator()(const Coord& c) const {
-            std::size_t h1 = std::hash<int>{}(c.X);
-            std::size_t h2 = std::hash<int>{}(c.Y);
-            return h1 ^ (h2 << 1); // Combine hashes
-        }
+    std::size_t operator()(const Coord& c) const
+    {
+        std::size_t h1 = std::hash<int>{}(c.X);
+        std::size_t h2 = std::hash<int>{}(c.Y);
+        return h1 ^ (h2 << 1); // Combine hashes
+    }
 };
 
 int main()
