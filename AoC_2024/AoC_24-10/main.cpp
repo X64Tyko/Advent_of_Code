@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <map>
 
 struct Coord
 {
@@ -85,7 +86,6 @@ int main()
 
     // store each trailhead as a pair< unique trailends, total rating >
     std::vector<std::pair<std::unordered_set<Coord, Coord>, int>> trailheads;
-
     int gridX = 0;
     int gridY = 0;
     for (; gridY < grid.size(); ++gridY)
