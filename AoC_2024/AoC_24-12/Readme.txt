@@ -1,0 +1,3 @@
+https://adventofcode.com/2024/day/12
+
+part 2 threw me for a loop for a bit. I started with iterating around the outer edge of the shape, but that didn't account or the holes that could be inside some of the areas. It took a bit to piece together that I could calculate the number of corners for each grid space and that that would correlate to the number of sides, interior and exterior. There's definitely room to improve memory footprint, especially the traversedIndices array, bools are way bigger than needed, but overall I'm pretty happy with this O(n) solution.
