@@ -10,8 +10,8 @@
 #define BOTLISTSIZE WIDTH * HEIGHT * 4
 
 int* ReadData(int* const BotList);
-void PredictBots(int* const BotList, int* const BotListEnd, int* Quadrants, int Grid[WIDTH][HEIGHT], int Iterations = ITERATIONS);
-bool ScanGrid(int Grid[WIDTH][HEIGHT]);
+void PredictBots(int* const BotList, int* const BotListEnd, int* Quadrants, int (&Grid)[WIDTH][HEIGHT], int Iterations = ITERATIONS);
+bool ScanGrid(int (&Grid)[WIDTH][HEIGHT]);
 
 int main()
 {
@@ -81,7 +81,7 @@ int* ReadData(int* const BotList)
     return CurrentLoc;
 }
 
-void PredictBots(int* const BotList, int* const BotListEnd, int* Quadrants, int Grid[WIDTH][HEIGHT], int Iterations)
+void PredictBots(int* const BotList, int* const BotListEnd, int* Quadrants, int (&Grid)[WIDTH][HEIGHT], int Iterations)
 {
     int NumBots = (BotListEnd - BotList + 1) / 4;
     int BotX = 0, BotY = 0;
@@ -105,7 +105,7 @@ void PredictBots(int* const BotList, int* const BotListEnd, int* Quadrants, int 
     }
 }
 
-bool ScanGrid(int Grid[WIDTH][HEIGHT])
+bool ScanGrid(int (&Grid)[WIDTH][HEIGHT])
 {
     for (int j = 0; j < WIDTH; ++j)
     {
