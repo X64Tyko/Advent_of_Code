@@ -1,0 +1,3 @@
+https://adventofcode.com/2024/day/14
+
+Part 2 definitely threw me off. I was not prepared to look for an "image" without knowing what that would look like. I made some wild guesses, like there being a border, initially I thought it would mean the whole grid would be the image, but that definitely didn't work. Decided that I would try and see if it happened when the bots were not overlapping... Doesn't seem like the safest heuristic, but it worked. Probably would be safer to try and detect "clumping".
