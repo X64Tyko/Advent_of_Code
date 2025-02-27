@@ -1,0 +1,3 @@
+https://adventofcode.com/2024/day/15
+
+2d array of pointers is fun... The implementation for part 1 used a single array of pointers for storing our move queue. We need a bit more than that when pushing the wide barrels around. This could be done more cleany for sure, some ideas were using classes or structs to link the wide barrels together and when one side moves force the other to as well. Uptimately I like how direct and speedy this approach seems to be. The addition of the WIDE_GRID define further muddies the ProcessMove function readability, but not to the point it's too dificult to parse.
